@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 
 class Level extends Model
 {
@@ -15,9 +17,9 @@ class Level extends Model
         'year',
     ];
 
-    public function specialities()
+    public function specialities(): BelongsToMany
     {
-        return $this->hasMany(Speciality::class);
+        return $this->belongsToMany(Speciality::class);
     }
 
 

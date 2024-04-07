@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Wallet extends Model
 {
@@ -12,27 +14,32 @@ class Wallet extends Model
     protected $fillable = [
         'rib',
         'amount',
-        'source',
+        'status',
     ];
 
-    public function prof()
+    public function prof(): HasOne
     {
         return $this->hasOne(Prof::class);
     }
 
-    public function transactions()
+    public function student(): HasOne
+    {
+        return $this->hasOne(Student::class);
+    }
+
+    public function school(): HasOne
+    {
+        return $this->hasOne(School::class);
+    }
+
+    public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
     }
 
-    public function student()
+    public function registrations(): HasMany
     {
-        return $this->hasOne(Prof::class);
+        return $this->hasMany(Registration::class);
     }
 
-    public function books()
-    {
-        return $this->hasMany(Book::class);
-    }
-    
 }

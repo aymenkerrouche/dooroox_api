@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Prof extends User
 {
@@ -11,42 +16,40 @@ class Prof extends User
 
 
     protected $fillable = [
-        'Experience',
+        'phone',
+        'location',
+        'latitude',
+        'longitude'
     ];
 
-    public function contents()
+    public function user(): MorphOne
+    {
+        return $this->morphOne(User::class, 'profile');
+    }
+
+    public function contents(): HasMany
     {
         return $this->hasMany(Content::class);
     }
 
-    public function schools()
+    public function schools(): BelongsToMany
     {
         return $this->belongsToMany(School::class);
     }
 
-    public function books()
+    public function books(): HasMany
     {
         return $this->hasMany(Book::class);
     }
 
-    public function specialties()
-    {
-        return $this->hasMany(Speciality::class);
-    }
-
-    public function wallet()
+    public function wallet(): HasOne
     {
         return $this->hasOne(Wallet::class);
     }
 
-    public function transactions()
+    public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
-    }
-
-    public function buys()
-    {
-         return $this->hasMany(Buy::class);
     }
 
 }

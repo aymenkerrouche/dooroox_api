@@ -4,22 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Wishlist extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'added_date'
-    ];
 
-
-    public function content()
+    public function contents(): BelongsToMany
     {
-        return $this->belongsTo(Content::class);
+        return $this->belongsToMany(Content::class);
     }
 
-    public function student()
+    public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
     }

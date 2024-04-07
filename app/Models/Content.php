@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Content extends Model
 {
@@ -18,42 +21,37 @@ class Content extends Model
         'price'
     ];
 
-    public function prof()
+    public function prof(): BelongsTo
     {
         return $this->belongsTo(Prof::class);
     }
 
-    public function pdf_material()
+    public function pdfMaterials(): HasMany
     {
         return $this->hasMany(Pdf_material::class);
     }
 
-    public function videos()
+    public function videos(): HasMany
     {
         return $this->hasMany(Video::class);
     }
 
-    public function quizzes()
+    public function quizzes(): HasMany
     {
         return $this->hasMany(Quiz::class);
     }
 
-    public function comments()
+    public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
 
-    public function wishlistes()
+    public function wishlists(): BelongsToMany
     {
         return $this->belongsToMany(Wishlist::class);
     }
 
-    public function students()
-    {
-        return $this->belongsToMany(Student::class);
-    }
-
-    public function registrations()
+    public function registrations(): HasMany
     {
         return $this->hasMany(Registration::class);
     }
