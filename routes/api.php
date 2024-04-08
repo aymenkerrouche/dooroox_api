@@ -97,7 +97,9 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
 
 //book
     Route::get('/books', [BookController::class, 'get_book']);
-
+    Route::post('/books', [BookController::class, 'add_book']);
+    Route::put('/books/{book}', [BookController::class, 'update_book']);
+    Route::delete('/books/{book}', [BookController::class, 'delete_book']);
 });
 
 
