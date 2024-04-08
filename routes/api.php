@@ -9,6 +9,9 @@ use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BuyController;
+
+
 
 
 
@@ -100,6 +103,14 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::post('/books', [BookController::class, 'add_book']);
     Route::put('/books/{book}', [BookController::class, 'update_book']);
     Route::delete('/books/{book}', [BookController::class, 'delete_book']);
+
+//buy
+    Route::post('/buys', [BuyController::class, 'buy_book']);
+
+
+
+
+
 });
 
 
