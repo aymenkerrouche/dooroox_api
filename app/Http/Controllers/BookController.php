@@ -87,6 +87,6 @@ class BookController extends Controller
             return response()->json(['error' => 'Failed to delete book: ' . $e->getMessage()], 500);
         }
     }
-    }
+    
 
 }
