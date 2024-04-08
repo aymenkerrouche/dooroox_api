@@ -69,6 +69,8 @@ class RegistrationController extends Controller
         return response()->json(['data' => $registrations]);
     }
 
+
+
     public function getRegistrationByContentIdOrUserId(Request $request): JsonResponse
     {
         $contentId = $request->input('content_id');

@@ -23,10 +23,12 @@ class AuthController extends Controller
         ]);
 
 
+
         $userExists = User::where('email', $request->email)->exists();
         if ($userExists) {
             return response()->json(['error' => 'The provided email already exists.'], 409);
         }
+
 
         // Create the user
         $user = User::create([

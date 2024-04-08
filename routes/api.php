@@ -8,6 +8,8 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookController;
+
 
 
 //public routes
@@ -91,6 +93,10 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
         Route::put('/{id}/increment', [WalletController::class, 'incrementBalance']);// Increment the balance of a wallet
         Route::put('/{id}/subtract', [WalletController::class, 'subtractBalance']);// Subtract the balance of a wallet
     });
+
+
+//book
+    Route::get('/books', [BookController::class, 'get_book']);
 
 });
 
