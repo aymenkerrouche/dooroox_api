@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BuyController;
-
+use App\Http\Controllers\LevelController;
 
 
 
@@ -98,14 +98,22 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     });
 
 
-//book
+    //book
     Route::get('/books', [BookController::class, 'get_book']);
     Route::post('/books', [BookController::class, 'add_book']);
     Route::put('/books/{book}', [BookController::class, 'update_book']);
     Route::delete('/books/{book}', [BookController::class, 'delete_book']);
 
-//buy
+    //buy
     Route::post('/buys', [BuyController::class, 'buy_book']);
+
+
+
+    //level
+    Route::get('/levels', [LevelController::class, 'get_levels']);
+    Route::post('/levels', [LevelController::class, 'add_level']);
+    Route::put('/levels/{id}', [LevelController::class, 'update_level']);
+    Route::delete('/levels/{id}', [LevelController::class, 'delete_level']);
 
 
 

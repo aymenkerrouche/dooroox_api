@@ -43,10 +43,9 @@ class BookController extends Controller
         }
     }
 
-    public function update_book(Book $book, Request $request)
+    public function update_book( $id, Request $request):JsonResponse
     {
-        $validatedData = $request->validate([
-            'title' => 'string',
+        $request->validate([            'title' => 'string',
             'author' => 'string',
             'description' => 'string',
             'price' => 'numeric|min:0',
@@ -54,39 +53,20 @@ class BookController extends Controller
             'prof_id' => 'exists:profs,id',
         ]);
 
-        try {
-            // Begin a database transaction
-            DB::beginTransaction();
+        $book = Book::findOrFail($id);
+        $book->update($request->all());
 
-            $book->update($validatedData);
-
-            DB::commit();
-
-            return response()->json(['message' => 'Book updated successfully', 'data' => $book]);
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => 'Failed to update book: ' . $e->getMessage()], 500);
-        }
+        return response()->json($book, 200);
     }
 
-    public function delete_book(Request $request, Book $book)
+    public function delete_book($id): JsonResponse
     {
-        try {
-            // Begin a database transaction
-            DB::beginTransaction();
 
-            $book->delete();
-
-            DB::commit();
-
-            return response()->json(['message' => 'Book deleted successfully']);
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => 'Failed to delete book: ' . $e->getMessage()], 500);
+            $level = Level::findOrFail($id);
+            $level->delete();
+            return response()->json(['message' => 'Level deleted successfully']);
         }
-    }
-    
+
+
 
 }
