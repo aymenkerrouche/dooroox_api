@@ -11,7 +11,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BuyController;
 use App\Http\Controllers\LevelController;
-
+use App\Http\Controllers\ProfController;
+use App\Http\Controllers\Pdf_materialController;
+use App\Http\Controllers\QuizzController;
+use App\Http\Controllers\SpecialityController;
+use App\Http\Controllers\VideoController;
 
 
 
@@ -98,24 +102,90 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     });
 
 
-    //book
-    Route::get('/books', [BookController::class, 'get_book']);
-    Route::post('/books', [BookController::class, 'add_book']);
-    Route::put('/books/{book}', [BookController::class, 'update_book']);
-    Route::delete('/books/{book}', [BookController::class, 'delete_book']);
-
     //buy
-    Route::post('/buys', [BuyController::class, 'buy_book']);
+
+    // Get all buys
+        Route::get('/buys', [BuyController::class, 'index']);
+
+    // Create a new buy
+        Route::post('/buys', [BuyController::class, 'store']);
+
+    // Get a specific buy
+        Route::get('/buys/{id}', [BuyController::class, 'show']);
+
+    // Update a specific buy
+        Route::put('/buys/{id}', [BuyController::class, 'update']);
+
+    // Delete a specific buy
+        Route::delete('/buys/{id}', [BuyController::class, 'destroy']);
 
 
 
     //level
-    Route::get('/levels', [LevelController::class, 'get_levels']);
-    Route::post('/levels', [LevelController::class, 'add_level']);
-    Route::put('/levels/{id}', [LevelController::class, 'update_level']);
-    Route::delete('/levels/{id}', [LevelController::class, 'delete_level']);
+    Route::get('/levels', [LevelController::class, 'index']);
+    Route::post('/levels', [LevelController::class, 'store']);
+    Route::get('/levels/{id}', [LevelController::class, 'show']);
+    Route::put('/levels/{id}', [LevelController::class, 'update']);
+    Route::delete('/levels/{id}', [LevelController::class, 'destroy']);
 
 
+    //book
+
+
+    Route::get('/books', [BookController::class, 'index']);
+    Route::post('/books', [BookController::class, 'store']);
+    Route::get('/books/{id}', [BookController::class, 'show']);
+    Route::put('/books/{id}', [BookController::class, 'update']);
+    Route::delete('/books/{id}', [BookController::class, 'destroy']);
+
+
+
+
+//prof
+
+// Routes for ProfController
+    Route::get('/prof/courses', [ProfController::class, 'get_content']);
+    Route::post('/prof/courses', [ProfController::class, 'add_content']);
+    Route::delete('/prof/courses/{id}', [ProfController::class, 'destroy_content']);
+    Route::post('/prof/online-groups', [ProfController::class, 'add_online_group']);
+    Route::post('/prof/f2f-groups', [ProfController::class, 'add_f2f_group']);
+
+
+
+    //pdf_material
+
+    Route::get('/pdf_materials', [Pdf_materialController::class, 'index']);
+    Route::get('/pdf_materials/{id}', [Pdf_materialController::class, 'show']);
+    Route::post('/pdf_materials', [Pdf_materialController::class, 'store']);
+    Route::put('/pdf_materials/{id}', [Pdf_materialController::class, 'update']);
+    Route::delete('/pdf_materials/{id}', [Pdf_materialController::class, 'destroy']);
+
+    //quizz
+
+    Route::get('/quizzes', [QuizzController::class, 'index']);
+    Route::get('/quizzes/{id}', [QuizzController::class, 'show']);
+    Route::post('/quizzes', [QuizzController::class, 'store']);
+    Route::put('/quizzes/{id}', [QuizzController::class, 'update']);
+    Route::delete('/quizzes/{id}', [QuizzController::class, 'destroy']);
+
+
+    //specialty
+
+
+    Route::get('/specialities', [SpecialityController::class, 'index']);
+    Route::get('/specialities/{id}', [SpecialityController::class, 'show']);
+    Route::post('/specialities', [SpecialityController::class, 'store']);
+    Route::put('/specialities/{id}', [SpecialityController::class, 'update']);
+    Route::delete('/specialities/{id}', [SpecialityController::class, 'destroy']);
+
+
+//video
+
+
+    Route::get('/videos/{id}', [VideoController::class, 'get_video']);
+    Route::post('/videos', [VideoController::class, 'upload_video']);
+    Route::put('/videos/{id}', [VideoController::class, 'update_path']);
+    Route::delete('/videos', [VideoController::class, 'delete_video']);
 
 
 

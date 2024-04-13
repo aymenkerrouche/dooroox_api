@@ -3,22 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use App\Models\Prof;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-
-    public function get_book(): JsonResponse
+    public function index(): JsonResponse
     {
         $books = Book::all();
-        return response()->json(['data' => $books]);
+        return response()->json($books);
     }
 
-    public function add_book(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'title' => 'required|string',
             'author' => 'required|string',
             'description' => 'required|string',
@@ -27,46 +25,39 @@ class BookController extends Controller
             'prof_id' => 'required|exists:profs,id',
         ]);
 
-        try {
-            // Begin a database transaction
-            DB::beginTransaction();
+        $book = Book::create($request->all());
 
-            $book = Book::create($validatedData);
-
-            DB::commit();
-
-            return response()->json(['message' => 'Book added successfully', 'data' => $book]);
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => 'Failed to add book: ' . $e->getMessage()], 500);
-        }
+        return response()->json(['message' => 'Book added successfully'], 201);
     }
 
-    public function update_book( $id, Request $request):JsonResponse
+    public function show($id): JsonResponse
     {
-        $request->validate([            'title' => 'string',
-            'author' => 'string',
-            'description' => 'string',
-            'price' => 'numeric|min:0',
-            'path' => 'string',
-            'prof_id' => 'exists:profs,id',
+        $book = Book::findOrFail($id);
+        return response()->json($book);
+    }
+
+    public function update(Request $request, $id): JsonResponse
+    {
+        $request->validate([
+            'title' => 'required|string',
+            'author' => 'required|string',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'path' => 'required|string',
+            'prof_id' => 'required|exists:profs,id',
         ]);
 
         $book = Book::findOrFail($id);
         $book->update($request->all());
 
-        return response()->json($book, 200);
+        return response()->json(['message' => 'Book updated successfully'], 200);
     }
 
-    public function delete_book($id): JsonResponse
+    public function destroy($id): JsonResponse
     {
+        $book = Book::findOrFail($id);
+        $book->delete();
 
-            $level = Level::findOrFail($id);
-            $level->delete();
-            return response()->json(['message' => 'Level deleted successfully']);
-        }
-
-
-
+        return response()->json(['message' => 'Book deleted successfully'], 200);
+    }
 }

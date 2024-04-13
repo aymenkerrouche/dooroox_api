@@ -8,26 +8,31 @@ use Illuminate\Http\Request;
 
 class LevelController extends Controller
 {
-    public function get_levels()
+    public function index(): JsonResponse
     {
         $levels = Level::all();
-        return response()->json(['data' => $levels]);
+        return response()->json($levels);
     }
 
-    public function add_level(Request $request)
+    public function store(Request $request): JsonResponse
     {
-
-        $validatedData = $request->validate([
+        $request->validate([
             'grade' => 'required',
             'year' => 'required',
         ]);
 
-        $level = Level::create($validatedData);
-        return response()->json(['message' => 'Level added successfully', 'data' => $level], 201);
+        $level = Level::create($request->all());
+
+        return response()->json(['message' => 'Level added successfully'], 201);
     }
 
+    public function show($id): JsonResponse
+    {
+        $level = Level::findOrFail($id);
+        return response()->json($level);
+    }
 
-    public function update_level(Request $request, $id): JsonResponse
+    public function update(Request $request, $id): JsonResponse
     {
         $request->validate([
             'grade' => 'required',
@@ -36,18 +41,15 @@ class LevelController extends Controller
 
         $level = Level::findOrFail($id);
         $level->update($request->all());
-        return response()->json(['message' => 'Level updated successfully', 'data' => $level]);
+
+        return response()->json(['message' => 'Level updated successfully'], 200);
     }
 
-
-    public function delete_level($id)
+    public function destroy($id): JsonResponse
     {
         $level = Level::findOrFail($id);
         $level->delete();
-        return response()->json(['message' => 'Level deleted successfully']);
+
+        return response()->json(['message' => 'Level deleted successfully'], 200);
     }
-
-
-
-
 }

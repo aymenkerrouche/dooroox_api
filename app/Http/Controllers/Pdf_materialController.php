@@ -2,24 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pdf_material;
 use Illuminate\Http\Request;
 
 class Pdf_materialController extends Controller
 {
-    public function get_material()
+    public function index(): JsonResponse
     {
+        $pdfMaterials = PdfMaterial::all();
+        return response()->json(['data' => $pdfMaterials]);
+    }
+
+    public function show($id): JsonResponse
+    {
+        $pdfMaterial = PdfMaterial::find($id);
+        if (!$pdfMaterial) {
+            return response()->json(['error' => 'PDF material not found'], 404);
+        }
+        return response()->json(['data' => $pdfMaterial]);
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'path' => 'required|string',
+        ]);
+
+
+            $pdfMaterial = PdfMaterial::create($request->all());
+            return response()->json(['message' => 'PDF material added successfully', 'data' => $pdfMaterial], 201);
 
     }
 
-    public function add_material()
+    public function update(Request $request, $id): JsonResponse
     {
-      
+
+
+        $request->validate([
+            'name' => 'required|string',
+            'path' => 'required|string',
+        ]);
+
+        $comment = Pdf_material::findOrFail($id);
+        $comment->update($request->all());
+
+       return response()->json(['message' => 'PDF material updated successfully', 'data' ,200]);
+
     }
 
-    public function delete_material()
+    public function destroy($id): JsonResponse
     {
-      
+        $pdfMaterial = PdfMaterial::find($id);
+
+
+
+            $pdfMaterial->delete();
+            return response()->json(['message' => 'PDF material deleted successfully']);
+
     }
 
-    
 }
