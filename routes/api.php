@@ -11,7 +11,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BuyController;
 use App\Http\Controllers\LevelController;
-use App\Http\Controllers\ProfController;
 use App\Http\Controllers\Pdf_materialController;
 use App\Http\Controllers\QuizzController;
 use App\Http\Controllers\SpecialityController;
@@ -142,13 +141,6 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
 
 
 //prof
-
-// Routes for ProfController
-    Route::get('/prof/courses', [ProfController::class, 'get_content']);
-    Route::post('/prof/courses', [ProfController::class, 'add_content']);
-    Route::delete('/prof/courses/{id}', [ProfController::class, 'destroy_content']);
-    Route::post('/prof/online-groups', [ProfController::class, 'add_online_group']);
-    Route::post('/prof/f2f-groups', [ProfController::class, 'add_f2f_group']);
 
 
 

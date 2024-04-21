@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('location')->nullable();
             $table->float('latitude')->nullable();
             $table->float('longitude')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
 
             // Foreign key relationship with the users table

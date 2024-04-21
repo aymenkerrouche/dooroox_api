@@ -25,7 +25,7 @@ class BookController extends Controller
             'prof_id' => 'required|exists:profs,id',
         ]);
 
-        $book = Book::create($request->all());
+        Book::create($request->all());
 
         return response()->json(['message' => 'Book added successfully'], 201);
     }
