@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Quizz;
 use http\Message\Body;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class QuizzController extends Controller

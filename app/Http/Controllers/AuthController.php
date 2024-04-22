@@ -54,7 +54,11 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return response()->json(['message' => 'Authentication successful'], 200);
+            $token = Auth::user()->createToken($request->email)->plainTextToken;
+            return response()->json([
+                'message' => 'Authentication successful','token' => $token,
+                'user' => Auth::user(),
+                ], 200);
         } else {
             return response()->json(['error' => 'The provided credentials are incorrect.'], 403);
         }
