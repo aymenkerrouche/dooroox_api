@@ -15,6 +15,7 @@ use App\Http\Controllers\Pdf_materialController;
 use App\Http\Controllers\QuizzController;
 use App\Http\Controllers\SpecialityController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\ProfController;
 
 
 
@@ -180,6 +181,17 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::delete('/videos', [VideoController::class, 'delete_video']);
 
 
+
+    //prof
+    Route::get('/profs', [ProfController::class, 'index']);
+    Route::post('/profs', [ProfController::class, 'store']);
+    Route::get('/profs/{id}', [ProfController::class, 'show']);
+    Route::put('/profs/{id}', [ProfController::class, 'update']);
+    Route::delete('/profs/{id}', [ProfController::class, 'destroy']);
+
+//    Route::put('/profs/{id}/change-status', [ProfController::class, 'changeStatus']);
+//    Route::put('/profs/{id}/add-school', [ProfController::class, 'addSchool']);
+//    Route::post('/profs/{id}/add-content', [ProfController::class, 'addContent']);
 
 });
 
