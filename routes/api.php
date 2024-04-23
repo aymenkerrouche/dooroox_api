@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContentController;
+use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TransactionController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\ProfController;
 
 
 
+
 //public routes
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -30,6 +32,12 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 //Protected routes
 Route::group(['middleware'=>['auth:sanctum']],function () {
+
+
+// Google Authentication Routes
+    Route::get('/login/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/login/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
+
 
 
     // AUTH
