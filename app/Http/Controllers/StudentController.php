@@ -24,16 +24,22 @@ class StudentController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'wilaya' => 'nullable|string',
-            'district' => 'nullable|string',
-            'birthday' => 'nullable|date',
-            'level_id' => 'nullable|exists:levels,id',
-        ]);
-
-        $student = Student::create($request->all());
-        return response()->json($student, 201);
+        try{
+            $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'wilaya' => 'nullable|string',
+                'district' => 'nullable|string',
+                'birthday' => 'nullable|date',
+                'level_id' => 'nullable|exists:levels,id',
+            ]);
+    
+            $student = Student::create($request->all());
+            return response()->json($student, 201);
+        }
+        catch(e){
+            return response()->json($e);
+        }
+        
     }
 
     public function update(Request $request, $id): JsonResponse

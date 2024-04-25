@@ -15,16 +15,15 @@ class Student extends User
 
 
     protected $fillable = [
-        'level',
+        'level_id',
+        'user_id',
+        'speciality_id',
         'wilaya',
         'district',
         'birthday'
     ];
 
-    public function user(): MorphOne
-    {
-        return $this->morphOne(User::class, 'profile');
-    }
+
     public function wallet(): HasOne
     {
         return $this->hasOne(Wallet::class);

@@ -10,11 +10,12 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->unique();
             $table->string('wilaya')->nullable();
             $table->string('district')->nullable();
             $table->date('birthday')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
+
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('level_id');
             $table->unsignedBigInteger('speciality_id')->nullable();
 
