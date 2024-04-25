@@ -11,7 +11,7 @@ class SpecialityController extends Controller
     public function index(): JsonResponse
     {
         $specialities = Speciality::all();
-        return response()->json(['data' => $specialities]);
+        return response()->json($specialities);
     }
 
     public function show($id): JsonResponse

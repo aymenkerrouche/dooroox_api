@@ -43,6 +43,7 @@ class StudentController extends Controller
             'district' => 'nullable|string',
             'birthday' => 'nullable|date',
             'level_id' => 'nullable|exists:levels,id',
+            'speciality_id' => 'nullable|exists:specialities,id',
         ]);
 
         $student = Student::where('user_id', $id)->firstOrFail();
