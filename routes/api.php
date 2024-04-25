@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
@@ -26,6 +27,8 @@ use App\Http\Controllers\ProfController;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+
+Route::post('/login/callback', [SocialiteController::class, 'handleProviderCallback']);
 
 
 
