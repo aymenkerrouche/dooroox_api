@@ -44,6 +44,7 @@ class SocialiteController extends Controller
             ],
             [
                 'name' => $providerUser['name'] ?? null,
+                'profile_photo_path' => $providerUser['picture'] ?? null,
             ]
         );
 
