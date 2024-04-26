@@ -37,18 +37,22 @@ class SocialiteController extends Controller
         // Handle response
         $providerUser = $response->json();
 
-        // Continue with your logic
         $user = User::firstOrCreate(
             [
-                'email' => $providerUser['email'] ?? null,
+                'email' => $providerUser['email'],
             ],
             [
-                'name' => $providerUser['name'] ?? null,
-                'profile_photo_path' => $providerUser['picture'] ?? null,
+                'name' => $providerUser['name'] ,
+                'profile_photo_path' => $providerUser['picture'],
             ]
         );
 
-        $email = $providerUser['email'] ?? null;
+        if($user->profile_photo_path === null) {
+            $user->profile_photo_path = $providerUser['picture'];
+            $user->save();
+        }        
+
+        $email = $providerUser['email'];
         $data =  [
             'token' => $user->createToken($email)->plainTextToken,
             'user' => $user,

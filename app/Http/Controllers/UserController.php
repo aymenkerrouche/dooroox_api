@@ -37,6 +37,10 @@ class UserController extends Controller
             $user->email = $request->email;
         }
 
+        if ($request->has('profile_photo_path')) {
+            $user->profile_photo_path = $request->profile_photo_path;
+        }
+
         $user->save();
 
         return response()->json(['message' => 'Profile updated.', 'user' => $user]);
