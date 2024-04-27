@@ -37,16 +37,24 @@ Route::post('/login/callback', [SocialiteController::class, 'handleProviderCallb
 Route::group(['middleware'=>['auth:sanctum']],function () {
 
 
-// Google Authentication Routes
-    Route::get('/login/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('auth.google');
-    Route::get('/login/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
-
-
 
     // AUTH
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
     Route::post('/delete-user', [AuthController::class, 'deleteUser']);
+
+    // USER
+    
+    Route::get('/user/{id}', [UserController::class, 'show']);
+    Route::put('/user/{id}', [UserController::class, 'update']);
+    Route::delete('/user/{id}', [UserController::class, 'destroy']);
+
+    // ME
+    Route::get('/me', [UserController::class, 'get_me']);
+    Route::put('/me', [UserController::class, 'update_me']);
+    Route::delete('/me', [UserController::class, 'destroy_me']);
+    
+    
 
 
     // Student
