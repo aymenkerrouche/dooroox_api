@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Prof;
-//use App\Models\School;
-//use App\Models\Content;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
