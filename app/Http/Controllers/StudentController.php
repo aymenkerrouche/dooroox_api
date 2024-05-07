@@ -45,6 +45,7 @@ class StudentController extends Controller
     {
         $request->validate([
             'wilaya' => 'nullable|string',
+            'sex' => 'nullable|string',
             'district' => 'nullable|string',
             'birthday' => 'nullable|date',
             'level_id' => 'nullable|exists:levels,id',

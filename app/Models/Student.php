@@ -16,6 +16,7 @@ class Student extends User
 
     protected $fillable = [
         'level_id',
+        'sex',
         'user_id',
         'speciality_id',
         'wilaya',
