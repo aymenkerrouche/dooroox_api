@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('district')->nullable();
             $table->date('birthday')->nullable();
             $table->string('sex')->nullable();
+            $table->string('phone')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
 
             $table->unsignedBigInteger('user_id');

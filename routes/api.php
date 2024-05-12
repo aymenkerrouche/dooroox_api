@@ -18,6 +18,7 @@ use App\Http\Controllers\QuizzController;
 use App\Http\Controllers\SpecialityController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProfController;
+use App\Http\Controllers\UserController;
 
 
 
@@ -46,13 +47,18 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     // USER
     
     Route::get('/user/{id}', [UserController::class, 'show']);
-    Route::put('/user/{id}', [UserController::class, 'update']);
+    Route::patch('/user/{id}', [UserController::class, 'update']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
 
     // ME
     Route::get('/me', [UserController::class, 'get_me']);
-    Route::put('/me', [UserController::class, 'update_me']);
+    Route::patch('/me', [UserController::class, 'update_me']);
     Route::delete('/me', [UserController::class, 'destroy_me']);
+
+    // USER PHOTO
+    Route::get('/me/photo', [UserController::class, 'showImage']);
+    Route::post('/me/photo', [UserController::class, 'uploadImage']);
+    Route::delete('/me/photo', [UserController::class, 'deleteImage']);
     
     
 
@@ -61,7 +67,7 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::get('/students', [StudentController::class, 'index']);
     Route::get('/students/{id}', [StudentController::class, 'show']);
     Route::post('/students', [StudentController::class, 'store']);
-    Route::put('/students/{id}', [StudentController::class, 'update']);
+    Route::patch('/students/{id}', [StudentController::class, 'update']);
     Route::delete('/students/{id}', [StudentController::class, 'destroy']);
     Route::post('/students/search', [StudentController::class, 'search']);
     Route::put('/students/{id}/change-level', [StudentController::class, 'changeLevel']);

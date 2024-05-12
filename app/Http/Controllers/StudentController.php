@@ -28,6 +28,8 @@ class StudentController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'wilaya' => 'nullable|string',
+            'sex' => 'nullable|string',
+            'phone' => 'nullable|string',
             'district' => 'nullable|string',
             'birthday' => 'nullable|date',
             'level_id' => 'nullable|exists:levels,id',
@@ -46,6 +48,7 @@ class StudentController extends Controller
         $request->validate([
             'wilaya' => 'nullable|string',
             'sex' => 'nullable|string',
+            'phone' => 'nullable|string',
             'district' => 'nullable|string',
             'birthday' => 'nullable|date',
             'level_id' => 'nullable|exists:levels,id',
@@ -54,7 +57,7 @@ class StudentController extends Controller
 
         $student = Student::where('user_id', $id)->firstOrFail();
         $student->update($request->all());
-        return response()->json($student, 200);
+        return response()->json(['message' => 'Profile updated.'], 200);
     }
     
 
