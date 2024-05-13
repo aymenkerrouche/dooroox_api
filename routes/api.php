@@ -178,6 +178,9 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::put('/pdf_materials/{id}', [Pdf_materialController::class, 'update']);
     Route::delete('/pdf_materials/{id}', [Pdf_materialController::class, 'destroy']);
 
+
+
+
     //quizz
 
     Route::get('/quizzes', [QuizzController::class, 'index']);
@@ -213,6 +216,9 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::get('/profs/{id}', [ProfController::class, 'show']);
     Route::put('/profs/{id}', [ProfController::class, 'update']);
     Route::delete('/profs/{id}', [ProfController::class, 'destroy']);
+    Route::patch('/profs/', [ProfController::class, 'update_me']);
+
+
 
 //    Route::put('/profs/{id}/change-status', [ProfController::class, 'changeStatus']);
 //    Route::put('/profs/{id}/add-school', [ProfController::class, 'addSchool']);
