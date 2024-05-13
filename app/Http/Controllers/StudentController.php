@@ -80,25 +80,55 @@ class StudentController extends Controller
 
     public function update(Request $request, $id): JsonResponse
     {
-        $request->validate([
-            'wilaya' => 'nullable|string',
-            'sex' => 'nullable|string',
-            'phone' => 'nullable|string',
-            'district' => 'nullable|string',
-            'birthday' => 'nullable|date',
-            'level_id' => 'nullable|exists:levels,id',
-            'speciality_id' => 'nullable|exists:specialities,id',
-        ]);
-
-
-
         try {
-
             $student = Student::where('user_id', $id)->firstOrFail();
-            $student->update($request->all());
+
+            if ($request->has('wilaya')) {
+                $request->validate([
+                    'wilaya' => 'nullable|string',
+                ]);
+                $student->wilaya = $request->wilaya;
+            }
+
+            if ($request->has('sex')) {
+                $request->validate([
+                    'sex' => 'nullable|string',
+                ]);
+                $student->sex = $request->sex;
+            }
+
+            if ($request->has('phone')) {
+                $request->validate([
+                    'phone' => 'nullable|string',
+                ]);
+                $student->phone = $request->phone;
+            }
+
+            if ($request->has('district')) {
+                $request->validate([
+                    'district' => 'nullable|string',
+                ]);
+                $student->district = $request->district;
+            }
+
+            if ($request->has('birthday')) {
+                $request->validate([
+                    'birthday' => 'nullable|date',
+                ]);
+                $student->birthday = $request->birthday;
+            }
+
+            if ($request->has('level_id')) {
+                $request->validate([
+                    'level_id' => 'nullable|exists:levels,id',
+                ]);
+                $student->level_id = $request->level_id;
+            }
+
+            $student->save();
 
             return response()->json([
-                "message" => "Profile updated successfully",
+                "message" => "Student profile updated successfully",
                 "data" => $student,
                 "error" => null
             ], 200);
@@ -109,8 +139,73 @@ class StudentController extends Controller
                 "error" => $e->getMessage()
             ], 500);
         }
-      }
+    }
 
+
+    public function update_me(Request $request): JsonResponse
+    {
+
+        try {
+            $user = auth()->user();
+            $student = Student::where('user_id', $user->id)->firstOrFail();
+
+            if ($request->has('wilaya')) {
+                $request->validate([
+                    'wilaya' => 'nullable|string',
+                ]);
+                $student->wilaya = $request->wilaya;
+            }
+
+            if ($request->has('sex')) {
+                $request->validate([
+                    'sex' => 'nullable|string',
+                ]);
+                $student->sex = $request->sex;
+            }
+
+            if ($request->has('phone')) {
+                $request->validate([
+                    'phone' => 'nullable|string',
+                ]);
+                $student->phone = $request->phone;
+            }
+
+            if ($request->has('district')) {
+                $request->validate([
+                    'district' => 'nullable|string',
+                ]);
+                $student->district = $request->district;
+            }
+
+            if ($request->has('birthday')) {
+                $request->validate([
+                    'birthday' => 'nullable|date',
+                ]);
+                $student->birthday = $request->birthday;
+            }
+
+            if ($request->has('level_id')) {
+                $request->validate([
+                    'level_id' => 'nullable|exists:levels,id',
+                ]);
+                $student->level_id = $request->level_id;
+            }
+
+            $student->save();
+
+            return response()->json([
+                "message" => "Student profile updated successfully",
+                "data" => $student,
+                "error" => null
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => null,
+                "data" => null,
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
 
     public function destroy($id): JsonResponse
     {

@@ -73,6 +73,8 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::put('/students/{id}/change-level', [StudentController::class, 'changeLevel']);
     Route::put('/students/{id}/change-status', [StudentController::class, 'changeStatus']);
     Route::put('/students/{id}/add-speciality', [StudentController::class, 'addSpeciality']);
+    Route::patch('/students/', [StudentController::class, 'update_me']);
+
 
 
 
