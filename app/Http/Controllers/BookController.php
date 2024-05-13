@@ -22,7 +22,7 @@ class BookController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'path' => 'required|string',
-            'prof_id' => 'required|exists:profs,id',
+            'user_id' => 'required|exists:users,id',
         ]);
 
         Book::create($request->all());
@@ -44,7 +44,7 @@ class BookController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'path' => 'required|string',
-            'prof_id' => 'required|exists:profs,id',
+            'user_id' => 'required|exists:users,id',
         ]);
 
         $book = Book::findOrFail($id);

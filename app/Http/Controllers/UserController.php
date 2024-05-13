@@ -3,125 +3,171 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
-class UserController extends Controller 
+class UserController extends Controller
 {
 
-    public function update_me(Request $request)
+    public function update_me(Request $request): JsonResponse
     {
         $user = auth()->user();
 
-        if ($request->has('password')) {
+        try {
 
-            $request->validate([
-                'password' => 'sometimes|required|min:8',
-            ]);
+            if ($request->has('password')) {
+                $request->validate([
+                    'password' => 'sometimes|required|min:8',
+                ]);
 
-            $user->password = Hash::make($request->password);
-        }
+                $user->password = Hash::make($request->password);
+            }
 
-        if ($request->has('name')) {
-            $request->validate([
-                'name' => 'sometimes|required',
-            ]);
-            $user->name = $request->name;
-        }
+            if ($request->has('name')) {
+                $request->validate([
+                    'name' => 'sometimes|required',
+                ]);
+                $user->name = $request->name;
+            }
 
-        if ($request->has('email')) {
-            $request->validate([
-                'email' => 'sometimes|required|unique',
-            ]);
-            $user->email = $request->email;
-        }
+            if ($request->has('email')) {
+                $request->validate([
+                    'email' => 'sometimes|required|unique',
+                ]);
+                $user->email = $request->email;
+            }
 
-        if ($request->has('profile_photo_path')) {
-            $user->profile_photo_path = $request->profile_photo_path;
-        }
+            if ($request->has('profile_photo_path')) {
+                $user->profile_photo_path = $request->profile_photo_path;
+            }
 
-        $user->save();
+            $user->save();
 
-        return response()->json(['message' => 'Profile updated.']);
-    }
+            return response()->json(['message' => 'Profile updated.', 'data' => null, 'error' => null]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => null, 'data' => null, 'error' => $e->getMessage()], 500);
+        } }
 
-    public function update($id)
+    public function update($id, Request $request): JsonResponse
     {
-        $user = User::user()->find($id);
+        try {
+            $user = User::user()->find($id);
 
-        if ($request->has('password')) {
+            if ($request->has('password')) {
+                $request->validate([
+                    'password' => 'sometimes|required|min:8',
+                ]);
 
-            $request->validate([
-                'password' => 'sometimes|required|min:8',
-            ]);
+                $user->password = Hash::make($request->password);
+            }
 
-            $user->password = Hash::make($request->password);
+            if ($request->has('name')) {
+                $request->validate([
+                    'name' => 'sometimes|required',
+                ]);
+                $user->name = $request->name;
+            }
+
+            if ($request->has('email')) {
+                $request->validate([
+                    'email' => 'sometimes|required|unique',
+                ]);
+                $user->email = $request->email;
+            }
+
+            if ($request->has('profile_photo_path')) {
+                $user->profile_photo_path = $request->profile_photo_path;
+            }
+
+            $user->save();
+
+            return response()->json([
+                'message' => 'Profile updated.',
+                'user' => $user,
+                'error' => null]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => null,
+                'user' => null,
+                'error' => $e->getMessage()], 500);
         }
-
-        if ($request->has('name')) {
-            $request->validate([
-                'name' => 'sometimes|required',
-            ]);
-            $user->name = $request->name;
-        }
-
-        if ($request->has('email')) {
-            $request->validate([
-                'email' => 'sometimes|required|unique',
-            ]);
-            $user->email = $request->email;
-        }
-
-        if ($request->has('profile_photo_path')) {
-            $user->profile_photo_path = $request->profile_photo_path;
-        }
-
-        $user->save();
-
-        return response()->json(['message' => 'Profile updated.', 'user' => $user]);
     }
 
-    public function show($id) {
+    public function show($id): JsonResponse
+    {
 
-         $user = User::user()->find($id);
+        try {
+            $user = User::user()->find($id);
+            return response()->json([
+                'message' => 'User found successfully',
+                'data' => $user, '
+                error' => null], 200);
 
-         return response()->json(['user' => $user]);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage()], 404);
+        }
     }
 
-    public function get_me() {
+    public function get_me(): JsonResponse
+    {
 
-        $user = auth()->user();
-        return response([
-            'user' => $user
-        ], 200);
+        try {
+            $user = auth()->user();
+            return response()->json([
+                'message' => 'User retrieved successfully',
+                'data' => $user,
+                'error' => null], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage()], 500);
+        }
     }
 
 
     public function destroy_me() {
-        $user = auth()->user();
-        Auth::logout();
-        $user->delete();
-        return response()->json(['message' => 'Your account deleted successfully']);
+        try {
+            $user = auth()->user();
+            Auth::logout();
+            $user->delete();
+            return response()->json([
+                'message' => 'Your account was deleted successfully',
+                'data' => null,
+                'error' => null], 200);
+
+
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+               ' error' => $e->getMessage()], 500);
+        }
     }
 
     public function destroy($id){
-        $user = User::user()->find($id);
-        $user->delete();
-        return response()->json(['message' => 'User deleted successfully']);
+        try {
+            $user = User::user()->find($id);
+            $user->delete();
+            return response()->json(['
+            message' => 'User deleted successfully',
+                'data' => null,
+                'error' => null], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+               ' data' => null,
+                'error' => $e->getMessage()], 404);
+        }
     }
-
-    public function showImage()
-    {
-        $user = auth()->user();
-        $user_image = $user->profile_photo_path;
-        return response([
-            'profile_photo_path' => file(public_path("/storage/users/6Tw1S6CqshsFY0NXIUgnQWgxI7Kl85wsnPUH4tPr.jpg"))
-        ],200);
-    }
-
 
     public function uploadImage(Request $request)
     {
@@ -129,34 +175,32 @@ class UserController extends Controller
 
             try{
                 $originalImage = $request->file('image');
-                $image = Storage::disk('local')->put('public/users', $originalImage, 'public');
+                $image = Storage::disk('photo')->put('/users', $originalImage, 'public');
 
                 $user = auth()->user();
-        
+
                 if ($user && $user->profile_photo_path) {
-                    Storage::disk('local')->delete($user->profile_photo_path);
+                    Storage::disk('photo')->delete($user->profile_photo_path);
                 }
 
                 DB::table('users')->where('id',$user->id)->update(['profile_photo_path' => $image,]);
 
-                return response([
-                    'image' => 'First/storage/app/'.$image,
-                ], 200);
+                return response()->json(['data' => $image,'error' => 'null'], 200);
             }
             catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 500);
             }
-            
+
         }
     }
 
     public function deleteImage(){
         $user = auth()->user();
-        
+
         if ($user && $user->profile_photo_path) {
 
-            Storage::disk('local')->delete($user->profile_photo_path);
-            
+            Storage::disk('photo')->delete($user->profile_photo_path);
+
             $user->profile_photo_path = null;
             $user->save();
 

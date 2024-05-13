@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Content;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -11,15 +12,37 @@ class ContentController extends Controller
     public function index(): JsonResponse
     {
         $contents = Content::all();
-        return response()->json($contents);
-    }
+        try {
+            return response()->json([
+                'message' => 'Contents retrieved successfully',
+                'data' => $contents,
+                'error' => null,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'An error occurred while processing the request.',
+            ], 500);
+        }    }
 
 
     public function show($id): JsonResponse
     {
         $content = Content::findOrFail($id);
-        return response()->json($content);
-    }
+        try {
+            return response()->json([
+                'message' => 'Content retrieved successfully',
+                'data' => $content,
+                'error' => null,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'Content not found',
+            ], 404);
+        }    }
 
 
     public function store(Request $request): JsonResponse
@@ -36,10 +59,19 @@ class ContentController extends Controller
         ]);
 
         try {
+
             $content = Content::create($request->all());
-            return response()->json($content, 201);
+            return response()->json([
+                'message' => 'Content created successfully',
+                'data' => $content,
+                'error' => null,
+            ], 201);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'An error occurred while processing the request. ',
+            ], 500);
         }
     }
 
@@ -58,24 +90,33 @@ class ContentController extends Controller
         ]);
 
         try {
+
             $content = Content::findOrFail($id);
             $content->update($request->all());
-            return response()->json($content, 200);
+            return response()->json([
+                'message' => 'Content updated successfully',
+                'data' => $content,
+                'error' => null,
+            ], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'An error occurred while processing the request. ',
+            ], 500);
         }
     }
 
 
     public function search(Request $request): JsonResponse
     {
-        $request->validate([
-            'keywords' => 'required|string',
-        ]);
-
-        $keywords = explode(' ', $request->input('keywords'));
-
         try {
+            $request->validate([
+                'keywords' => 'required|string',
+            ]);
+
+            $keywords = explode(' ', $request->input('keywords'));
+
             $query = Content::query();
 
             foreach ($keywords as $keyword) {
@@ -90,9 +131,17 @@ class ContentController extends Controller
 
             $contents = $query->get();
 
-            return response()->json($contents, 200);
+            return response()->json([
+                'message' => 'Search results retrieved successfully',
+                'data' => $contents,
+                'error' => null,
+            ], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'An error occurred while processing the request.',
+            ], 500);
         }
     }
 
@@ -101,12 +150,18 @@ class ContentController extends Controller
     {
         try {
             $contents = Content::where('creator_id', $creatorId)->get();
-
-            return response()->json($contents, 200);
+            return response()->json([
+                'message' => 'Teacher contents retrieved successfully',
+                'data' => $contents,
+                'error' => null,
+            ], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'An error occurred ',
+            ], 500);
+        }}
 
 
     public function destroy($id): JsonResponse
@@ -114,9 +169,17 @@ class ContentController extends Controller
         try {
             $content = Content::findOrFail($id);
             $content->delete();
-            return response()->json(['message' => 'Content deleted successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'Content deleted successfully',
+                'data' => null,
+                'error' => null,
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'An error',
+            ], 500);
         }
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -10,8 +11,18 @@ class VideoController extends Controller
 {
     public function get_video($id): JsonResponse
     {
-        $video = Video::findOrFail($id);
-        return response()->json(['data' => $video]);
+        try {
+            $video = Video::findOrFail($id);
+            return response()->json([
+                'message' => 'Video retrieved successfully',
+                'data' => $video,
+                'error' => null], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage()], 404);
+        }
     }
 
     public function upload_video(Request $request): JsonResponse
@@ -19,13 +30,24 @@ class VideoController extends Controller
     $request->validate([
             'path' => 'required|string',
         ]);
+        try {
 
-        $video = Video::create([
-            'path' => $request->path,
-        ]);
+            $video = Video::create([
+                'path' => $request->path,
+            ]);
 
-        return response()->json(['message' => 'Video uploaded successfully', 'data' => $video], 201);
-    }
+            return response()->json([
+                'message' => 'Video uploaded successfully',
+                'data' => $video,
+                'error' => null], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => null,
+               ' data' => null,
+                'error' => $e->getMessage()], 500);
+        }
+
+        }
 
     public function update_path($id ,Request $request): JsonResponse
     {
@@ -33,12 +55,23 @@ class VideoController extends Controller
             'path' => 'required|string',
         ]);
 
-        $video = Video::findOrFail($id);
-        $video->path = $request->path;
-        $video->save();
+        try {
 
-        return response()->json(['message' => 'Video path updated successfully', 'data' => $video], 200);
-    }
+            $video = Video::findOrFail($id);
+            $video->path = $request->path;
+            $video->save();
+
+            return response()->json([
+                'message' => 'Video path updated successfully',
+                'data' => $video,
+                'error' => null], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage()], 404);
+        }
+        }
 
     public function delete_video(Request $request): JsonResponse
     {
@@ -46,10 +79,14 @@ class VideoController extends Controller
             'id' => 'required|exists:videos,id',
         ]);
 
-        $video = Video::findOrFail($request->id);
-        $video->delete();
+        try {
 
-        return response()->json(['message' => 'Video deleted successfully'], 200);
+            $video = Video::findOrFail($request->id);
+            $video->delete();
+
+            return response()->json(['message' => 'Video deleted successfully', 'error' => null], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => null, 'error' => $e->getMessage()], 404);
+        }
     }
-
 }

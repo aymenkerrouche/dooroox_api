@@ -17,6 +17,7 @@ class Prof extends User
 
     protected $fillable = [
         'phone',
+        'user_id',
         'location',
         'latitude',
         'longitude'

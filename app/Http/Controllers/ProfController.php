@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Prof;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -11,14 +12,38 @@ class ProfController extends Controller
 
     public function index(): JsonResponse
     {
-        $profs = Prof::all();
-        return response()->json($profs);
+        try {
+            $profs = Prof::all();
+            return response()->json([
+                'message' => 'Professors retrieved successfully',
+                'data' => $profs,
+                'error' => null,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function show($id): JsonResponse
     {
-        $prof = Prof::where('user_id', $id)->firstOrFail();
-        return response()->json($prof);
+        try {
+            $prof = Prof::where('user_id', $id)->firstOrFail();
+            return response()->json([
+                'message' => 'Professor retrieved successfully',
+                'data' => $prof,
+                'error' => null,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'Professor not found',
+            ], 404);
+        }
     }
 
     public function store(Request $request): JsonResponse
@@ -31,8 +56,21 @@ class ProfController extends Controller
             'longitude' => 'nullable|numeric',
         ]);
 
-        $prof = Prof::create($request->all());
-        return response()->json($prof, 201);
+        try {
+
+            $prof = Prof::create($request->all());
+            return response()->json([
+                'message' => 'Professor added successfully',
+                'data' => $prof,
+                'error' => null,
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
@@ -45,17 +83,44 @@ class ProfController extends Controller
             'longitude' => 'nullable|numeric',
         ]);
 
-        $prof = Prof::where('user_id', $id)->firstOrFail();
-        $prof->update($request->all());
-        return response()->json($prof, 200);
+        try {
+
+            $prof = Prof::where('user_id', $id)->firstOrFail();
+            $prof->update($request->all());
+
+            return response()->json([
+                'message' => 'Professor updated successfully',
+                'data' => $prof,
+                'error' => null,
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function destroy($id): JsonResponse
     {
-        $prof = Prof::where('user_id', $id)->firstOrFail();
-        $prof->delete();
-        return response()->json(['message' => 'Prof deleted successfully'], 200);
-    }}
+        try {
+            $prof = Prof::where('user_id', $id)->firstOrFail();
+            $prof->delete();
+            return response()->json([
+                'message' => 'Professor deleted successfully',
+                'data' => null,
+                'error' => null,
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    }
 
 //    public function addSchool(Request $request, $id): JsonResponse
 //    {

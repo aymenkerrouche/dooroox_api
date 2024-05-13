@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buy;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -11,7 +13,19 @@ class BuyController extends Controller
     public function index(): JsonResponse
     {
         $buys = Buy::all();
-        return response()->json($buys);
+        try {
+            return response()->json([
+                'message' => 'Buys retrieved successfully',
+                'data' => $buys,
+                'error' => null,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function store(Request $request): JsonResponse
@@ -24,14 +38,43 @@ class BuyController extends Controller
 
         $buy = Buy::create($request->all());
 
-        return response()->json($buy, 201);
-    }
+        try {
+
+            return response()->json([
+                'message' => 'Buy created successfully',
+                'data' => $buy,
+                'error' => null,
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'error',
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }    }
 
     public function show($id): JsonResponse
     {
         $buy = Buy::findOrFail($id);
-        return response()->json($buy);
-    }
+        try {
+            return response()->json([
+                'message' => 'Buy retrieved successfully',
+                'data' => $buy,
+                'error' => null,
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'Buy not found',
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }    }
 
     public function update(Request $request, $id): JsonResponse
     {
@@ -41,17 +84,60 @@ class BuyController extends Controller
             'ref' => 'required|string',
         ]);
 
-        $buy = Buy::findOrFail($id);
-        $buy->update($request->all());
 
-        return response()->json($buy, 200);
+        try {
+
+            $buy = Buy::findOrFail($id);
+            $buy->update($request->all());
+
+            return response()->json([
+                'message' => 'Buy updated successfully',
+                'data' => $buy,
+                'error' => null,
+            ], 200);
+        }
+
+        catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'Buy not found',
+            ], 404);
+        }
+
+        catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function destroy($id): JsonResponse
     {
-        $buy = Buy::findOrFail($id);
-        $buy->delete();
 
-        return response()->json($buy, 200);
+
+        try {
+            $buy = Buy::findOrFail($id);
+            $buy->delete();
+            return response()->json([
+                'message' => 'Buy deleted successfully',
+                'data' => null,
+                'error' => null,
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'Buy not found',
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

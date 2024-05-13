@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quizz;
-use http\Message\Body;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -11,14 +11,38 @@ class QuizzController extends Controller
 {
     public function index(): JsonResponse
     {
-        $quizzes = Quizz::all();
-        return response()->json($quizzes);
+        try {
+            $quizzes = Quizz::all();
+            return response()->json([
+                'message' => 'Quizzes retrieved successfully',
+                'data' => $quizzes,
+                'error' => null,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function show($id): JsonResponse
     {
-        $quizz = Quizz::findOrFail($id);
-        return response()->json($quizz);
+        try {
+            $quizz = Quizz::findOrFail($id);
+            return response()->json([
+                'message' => 'Quizz retrieved successfully',
+                'data' => $quizz,
+                'error' => null,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' =>  $e->getMessage(),
+            ], 404);
+        }
     }
 
     public function store(Request $request): JsonResponse
@@ -28,9 +52,23 @@ class QuizzController extends Controller
             'description' => 'required|string',
         ]);
 
-        $quizz = Quizz::create($validatedData);
-        return response()->json(['message' => 'Quizz added successfully'], 201);
-    }
+        try {
+
+            $quizz = Quizz::create($validatedData);
+            return response()->json([
+                'message' => 'Quizz added successfully',
+                'data' => $quizz,
+                'error' => null,
+            ], 201);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+      }
 
     public function update(Request $request, $id): JsonResponse
     {
@@ -39,18 +77,43 @@ class QuizzController extends Controller
             'description' => 'required|string',
         ]);
 
-        $quizz = Quizz::findOrFail($id);
-        $quizz->update($validatedData);
+        try {
 
-        return response()->json(['message' => 'Quizz updated successfully'], 200);
+            $quizz = Quizz::findOrFail($id);
+            $quizz->update($validatedData);
+
+            return response()->json([
+                'message' => 'Quizz updated successfully',
+                'data' => $quizz,
+                'error' => null,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function destroy($id): JsonResponse
     {
-        $quizz = Quizz::findOrFail($id);
-        $quizz->delete();
+        try {
+            $quizz = Quizz::findOrFail($id);
+            $quizz->delete();
 
-        return response()->json(['message' => 'Quizz deleted successfully'], 200);
-    }
+            return response()->json([
+                'message' => 'Quizz deleted successfully',
+                'data' => null,
+                'error' => null,
+            ], 200);
 
-}
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+
+    }}

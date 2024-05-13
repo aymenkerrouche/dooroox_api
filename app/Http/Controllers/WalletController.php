@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Wallet;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
@@ -13,9 +14,16 @@ class WalletController extends Controller
     {
         try {
             $wallets = Wallet::all();
-            return response()->json($wallets, 200);
+            return response()->json([
+                'message' => 'wallet retrieved successfully',
+                'data' => $wallets,
+                'error' => null], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'An error occurred while processing the request.', ], 500);
+
         }
     }
 
@@ -23,11 +31,18 @@ class WalletController extends Controller
     {
         try {
             $wallet = Wallet::findOrFail($id);
-            return response()->json($wallet, 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
-        }
-    }
+            return response()->json([
+                'message' => 'wallet retrieved successfully',
+                'data' => $wallet,
+                'error' => null], 200);        }
+
+        catch (Exception $e) {
+                return response()->json([
+                    'message' => null,
+                    'data' => null,
+                    'error' => 'Content not found',
+                ], 404);            }        }
+
 
     public function store(Request $request): JsonResponse
     {
@@ -40,33 +55,45 @@ class WalletController extends Controller
             ]);
 
             $wallet = Wallet::create($request->all());
-
-            return response()->json($wallet, 201);
-        } catch (ValidationException $e) {
-            return response()->json(['error' => $e->errors()], 400);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'wallet created successfully',
+                'data' => $wallet,
+                'error' => null,
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => null,
+                'data' => null,
+                'error' => 'error'.$e->getMessage()], 500);
         }
     }
 
-    public function update($id, Request $request): JsonResponse
+    public function update(Request $request): JsonResponse
     {
         try {
-            $request->validate([
-                'user_id' => 'sometimes|exists:users,id',
-                'rib' => 'sometimes|unique:wallets,rib,' . $id,
-                'balance' => 'sometimes|numeric',
-                'status' => 'sometimes|in:active,inactive',
-            ]);
+            $user = auth()->user();
+            $wallet = Wallet::where('user_id', $user->id)->firstOrFail();
 
-            $wallet = Wallet::findOrFail($id);
-            $wallet->update($request->all());
+            if ($request->has('rib')) {
+                $request->validate([
+                    'rib' => 'sometimes|required',
+                ]);
+                $wallet->rib = $request->rib;
+            }
+            if ($request->has('balance')) {
+                $wallet->rib = $request->balance;
+            }
+            if ($request->has('status')) {
+                $wallet->rib = $request->status;
+            }
 
-            return response()->json(['message' => 'Wallet updated successfully'], 200);
+            $wallet->save();
+
+            return response()->json(['message' => 'Wallet updated successfully', 'data' => $wallet], 200);
         } catch (ValidationException $e) {
-            return response()->json(['error' => $e->errors()], 400);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'validation error'.$e->errors()], 400);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'error'.$e->getMessage()], 500);
         }
     }
 
@@ -78,19 +105,22 @@ class WalletController extends Controller
 
             return response()->json(['message' => 'Wallet deleted successfully'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'error'.$e->getMessage()], 500);
         }
     }
 
 
-    public function incrementBalance($id, Request $request): JsonResponse
+    public function incrementBalance(Request $request): JsonResponse
     {
         try {
+
+            $user = auth()->user();
+            $wallet = Wallet::where('user_id', $user->id)->firstOrFail();
+
             $request->validate([
-                'amount' => 'required|numeric|min:0',
+                'amount' => 'required|min:0',
             ]);
 
-            $wallet = Wallet::findOrFail($id);
             $wallet->balance += $request->amount;
             $wallet->save();
 
@@ -102,14 +132,16 @@ class WalletController extends Controller
         }
     }
 
-    public function subtractBalance($id, Request $request): JsonResponse
+    public function subtractBalance(Request $request): JsonResponse
     {
         try {
-            $request->validate([
-                'amount' => 'required|numeric|min:0',
-            ]);
+            $user = auth()->user();
+            $wallet = Wallet::where('user_id', $user->id)->firstOrFail();
 
-            $wallet = Wallet::findOrFail($id);
+
+            $request->validate([
+                'amount' => 'required|min:0',
+            ]);
 
             if ($wallet->balance < $request->amount) {
                 throw new \Exception('Insufficient balance');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,8 +20,8 @@ class TransactionController extends Controller
             'note' => 'nullable|string',
             'ref' => 'required|integer',
         ]);
-
         try {
+
             $transaction = Transaction::create([
                 'user_id' => $request->user_id,
                 'wallet_id' => $request->wallet_id,
@@ -30,10 +31,17 @@ class TransactionController extends Controller
                 'ref' => $request->ref,
             ]);
 
-            return response()->json($transaction, 201);
-
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                "message" => "Transaction created successfully",
+                "data" => $transaction,
+                "error" => null
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => null,
+                "data" => null,
+                "error" => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -42,9 +50,17 @@ class TransactionController extends Controller
     {
         try {
             $transaction = Transaction::findOrFail($id);
-            return response()->json($transaction, 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return response()->json([
+                "message" => "Transaction retrieved successfully",
+                "data" => $transaction,
+                "error" => null
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => null,
+                "data" => null,
+                "error" => $e->getMessage()
+            ], 404);
         }
     }
 
@@ -57,11 +73,21 @@ class TransactionController extends Controller
         ]);
 
         try {
+
             $transaction = Transaction::findOrFail($id);
             $transaction->update($request->only(['amount', 'note', 'ref']));
-            return response()->json($transaction, 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+
+            return response()->json([
+                "message" => "Transaction updated successfully",
+                "data" => $transaction,
+                "error" => null
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => null,
+                "data" => null,
+                "error" => $e->getMessage()
+            ], 404);
         }
     }
 
@@ -71,20 +97,33 @@ class TransactionController extends Controller
             'keyword' => 'required|string',
         ]);
 
-        $keyword = $request->input('keyword');
+        try {
 
-        $transactions = Transaction::query()
-            ->select('transactions.*')
-            ->join('users as sender', 'transactions.user_id', '=', 'sender.id')
-            ->join('wallets', 'transactions.wallet_id', '=', 'wallets.id')
-            ->leftJoin('users as recipient', 'wallets.user_id', '=', 'recipient.id')
-            ->where('sender.name', 'like', "%$keyword%")
-            ->orWhere('sender.email', 'like', "%$keyword%")
-            ->orWhere('recipient.name', 'like', "%$keyword%")
-            ->orWhere('recipient.email', 'like', "%$keyword%")
-            ->get();
+            $keyword = $request->input('keyword');
 
-        return response()->json($transactions);
+            $transactions = Transaction::query()
+                ->select('transactions.*')
+                ->join('users as sender', 'transactions.user_id', '=', 'sender.id')
+                ->join('wallets', 'transactions.wallet_id', '=', 'wallets.id')
+                ->leftJoin('users as recipient', 'wallets.user_id', '=', 'recipient.id')
+                ->where('sender.name', 'like', "%$keyword%")
+                ->orWhere('sender.email', 'like', "%$keyword%")
+                ->orWhere('recipient.name', 'like', "%$keyword%")
+                ->orWhere('recipient.email', 'like', "%$keyword%")
+                ->get();
+
+            return response()->json([
+                "message" => "Transactions retrieved successfully",
+                "data" => $transactions,
+                "error" => null
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => null,
+                "data" => null,
+                "error" => $e->getMessage()
+            ], 500);
+        }
     }
 
 
@@ -93,9 +132,18 @@ class TransactionController extends Controller
         try {
             $transaction = Transaction::findOrFail($id);
             $transaction->delete();
-            return response()->json(['message' => 'Transaction deleted successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+
+            return response()->json([
+                "message" => "Transaction deleted successfully",
+                "data" => null,
+                "error" => null
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => null,
+                "data" => null,
+                "error" => $e->getMessage()
+            ], 404);
         }
     }
 

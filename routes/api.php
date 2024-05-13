@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContentController;
-use App\Http\Controllers\GoogleLoginController;
+
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\StudentController;
@@ -45,7 +45,7 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::post('/delete-user', [AuthController::class, 'deleteUser']);
 
     // USER
-    
+
     Route::get('/user/{id}', [UserController::class, 'show']);
     Route::patch('/user/{id}', [UserController::class, 'update']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
@@ -59,8 +59,8 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::get('/me/photo', [UserController::class, 'showImage']);
     Route::post('/me/photo', [UserController::class, 'uploadImage']);
     Route::delete('/me/photo', [UserController::class, 'deleteImage']);
-    
-    
+
+
 
 
     // Student
@@ -113,19 +113,17 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::delete('/registrations/{id}', [RegistrationController::class, 'cancelRegistration']);
 
 
+//wallet
 
-    Route::prefix('wallets')->group(function () {
-        Route::get('/', [WalletController::class, 'index']);
-        Route::post('/{id}/increment', [WalletController::class, 'store']); //Create a new wallet
-        Route::get('/{id}', [WalletController::class, 'show']); // Get a specific wallet by ID
-        Route::put('/{id}', [WalletController::class, 'update']); // Update a specific wallet by ID
-        Route::delete('/{id}', [WalletController::class, 'destroy']); // Delete a specific wallet by ID
+    Route::get('/wallets', [WalletController::class, 'index']);
+    Route::post('/wallets', [WalletController::class, 'store']); //Create a new wallet
+    Route::get('/wallets/{id}', [WalletController::class, 'show']); // Get a specific wallet by ID
+    Route::patch('/wallets', [WalletController::class, 'update']); // Update a specific wallet by ID
+    Route::delete('/wallets/{id}', [WalletController::class, 'destroy']); // Delete a specific wallet by ID
 
-        // Increment or subtract balance routes
-        Route::put('/{id}/increment', [WalletController::class, 'incrementBalance']);// Increment the balance of a wallet
-        Route::put('/{id}/subtract', [WalletController::class, 'subtractBalance']);// Subtract the balance of a wallet
-    });
-
+    // Increment or subtract balance routes
+    Route::patch('/wallets/increment', [WalletController::class, 'incrementBalance']);// Increment the balance of a wallet
+    Route::patch('/wallets/subtract', [WalletController::class, 'subtractBalance']);// Subtract the balance of a wallet
 
     //buy
 
