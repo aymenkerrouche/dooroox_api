@@ -216,7 +216,7 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::get('/profs/{id}', [ProfController::class, 'show']);
     Route::put('/profs/{id}', [ProfController::class, 'update']);
     Route::delete('/profs/{id}', [ProfController::class, 'destroy']);
-    Route::patch('/profs/', [ProfController::class, 'update_me']);
+    Route::patch('/profs', [ProfController::class, 'update_me']);
 
 
 

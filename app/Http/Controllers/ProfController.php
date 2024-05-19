@@ -106,41 +106,32 @@ class ProfController extends Controller
 
     public function update_me(Request $request): JsonResponse
     {
-
         try {
             $user = auth()->user();
             $prof = Prof::where('user_id', $user->id)->firstOrFail();
 
+            $request->validate([
+                'phone' => 'nullable|string',
+                'location' => 'nullable|string',
+                'latitude' => 'nullable|numeric',
+                'longitude' => 'nullable|numeric',
+            ]);
+
             if ($request->has('phone')) {
-                $request->validate([
-                    'phone' => 'nullable|string',
-                ]);
                 $prof->phone = $request->phone;
             }
 
             if ($request->has('location')) {
-                $request->validate([
-                    'location' => 'nullable|string',
-                ]);
-                $prof->sex = $request->location;
+                $prof->location = $request->location;
             }
 
             if ($request->has('latitude')) {
-                $request->validate([
-                    'phone' => 'nullable|string',
-                ]);
-                $prof->phone = $request->latitude;
+                $prof->latitude = $request->latitude;
             }
 
             if ($request->has('longitude')) {
-                $request->validate([
-                    'district' => 'nullable|string',
-                ]);
                 $prof->longitude = $request->longitude;
             }
-
-
-
 
             $prof->save();
 
@@ -157,6 +148,7 @@ class ProfController extends Controller
             ], 500);
         }
     }
+
 
     public function destroy($id): JsonResponse
     {
