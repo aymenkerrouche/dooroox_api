@@ -6,9 +6,9 @@ use App\Models\Prof;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-//update_me
+//update_me done
 //best_teacher = function )migration) user_id / prof_id / order (integer) create 5 profs
-//new migration = major (id - name - foreigh key men level -specilaty) copier coller mn user / picture
+//new migration = major (id - name - foreigh key men level -specilaty) copier coller mn user / picture done 
 class ProfController extends Controller
 {
 
