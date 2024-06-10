@@ -21,20 +21,18 @@ class VideoController extends Controller
             return response()->json([
                 'message' => null,
                 'data' => null,
-                'error' => $e->getMessage()], 404);
+                'error' => $e->getMessage()], 500);
         }
     }
 
     public function upload_video(Request $request): JsonResponse
     {
-    $request->validate([
-            'path' => 'required|string',
-        ]);
+        $request->validate(
+            ['path' => 'required|string',
+            'content_id' => 'required']
+        );
         try {
-
-            $video = Video::create([
-                'path' => $request->path,
-            ]);
+            $video = Video::create($request->all());
 
             return response()->json([
                 'message' => 'Video uploaded successfully',
@@ -47,13 +45,14 @@ class VideoController extends Controller
                 'error' => $e->getMessage()], 500);
         }
 
-        }
+    }
 
     public function update_path($id ,Request $request): JsonResponse
     {
-        $request->validate([
-            'path' => 'required|string',
-        ]);
+        $request->validate(
+            ['path' => 'required|string',
+                'content_id' => 'required']
+        );
 
         try {
 
@@ -69,19 +68,18 @@ class VideoController extends Controller
             return response()->json([
                 'message' => null,
                 'data' => null,
-                'error' => $e->getMessage()], 404);
+                'error' => $e->getMessage()], 500);
         }
         }
 
-    public function delete_video(Request $request): JsonResponse
+    public function delete_video($id): JsonResponse
     {
-        $request->validate([
+        $id->validate([
             'id' => 'required|exists:videos,id',
         ]);
 
         try {
-
-            $video = Video::findOrFail($request->id);
+            $video = Video::findOrFail($id);
             $video->delete();
 
             return response()->json(['message' => 'Video deleted successfully', 'error' => null], 200);

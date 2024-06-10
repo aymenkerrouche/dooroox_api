@@ -11,8 +11,9 @@ class ContentController extends Controller
 {
     public function index(): JsonResponse
     {
-        $contents = Content::all();
+
         try {
+            $contents = Content::all();
             return response()->json([
                 'message' => 'Contents retrieved successfully',
                 'data' => $contents,
@@ -29,8 +30,9 @@ class ContentController extends Controller
 
     public function show($id): JsonResponse
     {
-        $content = Content::findOrFail($id);
+
         try {
+            $content = Content::findOrFail($id);
             return response()->json([
                 'message' => 'Content retrieved successfully',
                 'data' => $content,
@@ -41,7 +43,7 @@ class ContentController extends Controller
                 'message' => null,
                 'data' => null,
                 'error' => $e->getMessage(),
-            ], 404);
+            ], 500);
         }    }
 
 

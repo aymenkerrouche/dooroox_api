@@ -187,7 +187,7 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::get('/videos/{id}', [VideoController::class, 'get_video']);
     Route::post('/videos', [VideoController::class, 'upload_video']);
     Route::put('/videos/{id}', [VideoController::class, 'update_path']);
-    Route::delete('/videos', [VideoController::class, 'delete_video']);
+    Route::delete('/videos/{id}', [VideoController::class, 'delete_video']);
 
 
 
