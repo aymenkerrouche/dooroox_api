@@ -115,7 +115,7 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::delete('/registrations/{id}', [RegistrationController::class, 'cancelRegistration']);
 
 
-//wallet
+    //wallet
 
     Route::get('/wallets', [WalletController::class, 'index']);
     Route::post('/wallets', [WalletController::class, 'store']); //Create a new wallet
@@ -127,22 +127,14 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::patch('/wallets/increment', [WalletController::class, 'incrementBalance']);// Increment the balance of a wallet
     Route::patch('/wallets/subtract', [WalletController::class, 'subtractBalance']);// Subtract the balance of a wallet
 
+
     //buy
 
-    // Get all buys
-        Route::get('/buys', [BuyController::class, 'index']);
-
-    // Create a new buy
-        Route::post('/buys', [BuyController::class, 'store']);
-
-    // Get a specific buy
-        Route::get('/buys/{id}', [BuyController::class, 'show']);
-
-    // Update a specific buy
-        Route::put('/buys/{id}', [BuyController::class, 'update']);
-
-    // Delete a specific buy
-        Route::delete('/buys/{id}', [BuyController::class, 'destroy']);
+    Route::get('/buys', [BuyController::class, 'index']);
+    Route::post('/buys', [BuyController::class, 'store']);
+    Route::get('/buys/{id}', [BuyController::class, 'show']);
+    Route::put('/buys/{id}', [BuyController::class, 'update']);
+    Route::delete('/buys/{id}', [BuyController::class, 'destroy']);
 
 
 
@@ -156,18 +148,11 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
 
     //book
 
-
     Route::get('/books', [BookController::class, 'index']);
     Route::post('/books', [BookController::class, 'store']);
     Route::get('/books/{id}', [BookController::class, 'show']);
     Route::put('/books/{id}', [BookController::class, 'update']);
     Route::delete('/books/{id}', [BookController::class, 'destroy']);
-
-
-
-
-//prof
-
 
 
     //pdf_material
@@ -177,8 +162,6 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::post('/pdf_materials', [Pdf_materialController::class, 'store']);
     Route::put('/pdf_materials/{id}', [Pdf_materialController::class, 'update']);
     Route::delete('/pdf_materials/{id}', [Pdf_materialController::class, 'destroy']);
-
-
 
 
     //quizz
@@ -192,7 +175,6 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
 
     //specialty
 
-
     Route::get('/specialities', [SpecialityController::class, 'index']);
     Route::get('/specialities/{id}', [SpecialityController::class, 'show']);
     Route::post('/specialities', [SpecialityController::class, 'store']);
@@ -200,8 +182,7 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::delete('/specialities/{id}', [SpecialityController::class, 'destroy']);
 
 
-//video
-
+    //video
 
     Route::get('/videos/{id}', [VideoController::class, 'get_video']);
     Route::post('/videos', [VideoController::class, 'upload_video']);

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Content extends Model
 {
     protected $fillable = [
+        'creator_id',
         'title',
         'description',
         'cover_picture',

@@ -22,7 +22,7 @@ class ContentController extends Controller
             return response()->json([
                 'message' => null,
                 'data' => null,
-                'error' => 'An error occurred while processing the request.',
+                'error' => $e->getMessage(),
             ], 500);
         }    }
 
@@ -40,7 +40,7 @@ class ContentController extends Controller
             return response()->json([
                 'message' => null,
                 'data' => null,
-                'error' => 'Content not found',
+                'error' => $e->getMessage(),
             ], 404);
         }    }
 
@@ -48,8 +48,9 @@ class ContentController extends Controller
     public function store(Request $request): JsonResponse
     {
         $request->validate([
+            'creator_id' => 'required|exists:users,id',
             'title' => 'required|string',
-            'description' => 'required|string',
+            'description' => 'required',
             'cover_picture' => 'nullable|string',
             'total_rate' => 'nullable|numeric',
             'total_comment' => 'nullable|integer',
@@ -70,7 +71,7 @@ class ContentController extends Controller
             return response()->json([
                 'message' => null,
                 'data' => null,
-                'error' => 'An error occurred while processing the request. ',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -102,7 +103,7 @@ class ContentController extends Controller
             return response()->json([
                 'message' => null,
                 'data' => null,
-                'error' => 'An error occurred while processing the request. ',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -140,7 +141,7 @@ class ContentController extends Controller
             return response()->json([
                 'message' => null,
                 'data' => null,
-                'error' => 'An error occurred while processing the request.',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -159,7 +160,7 @@ class ContentController extends Controller
             return response()->json([
                 'message' => null,
                 'data' => null,
-                'error' => 'An error occurred ',
+                'error' => $e->getMessage(),
             ], 500);
         }}
 
@@ -178,7 +179,7 @@ class ContentController extends Controller
             return response()->json([
                 'message' => null,
                 'data' => null,
-                'error' => 'An error',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
