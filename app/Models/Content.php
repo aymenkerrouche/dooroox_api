@@ -39,7 +39,7 @@ class Content extends Model
 
     public function quizzes(): HasMany
     {
-        return $this->hasMany(Quizz::class);
+        return $this->hasMany(Quiz::class);
     }
 
     public function comments(): HasMany

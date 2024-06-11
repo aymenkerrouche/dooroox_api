@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Quiz;
+use App\Models\Question;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class QuizController extends Controller
+class QuestionController extends Controller
 {
     public function index(): JsonResponse
     {
         try {
-            $quizzes = Quiz::all();
+            $questions = Question::all();
             return response()->json([
-                'message' => 'Quizzes retrieved successfully',
-                'data' => $quizzes,
+                'message' => 'Questions retrieved successfully',
+                'data' => $questions,
                 'error' => null,
             ]);
         } catch (Exception $e) {
@@ -30,10 +30,10 @@ class QuizController extends Controller
     public function show($id): JsonResponse
     {
         try {
-            $quizz = Quiz::findOrFail($id);
+            $question = Question::findOrFail($id);
             return response()->json([
-                'message' => 'Quiz retrieved successfully',
-                'data' => $quizz,
+                'message' => 'Question retrieved successfully',
+                'data' => $question,
                 'error' => null,
             ]);
         } catch (Exception $e) {
@@ -41,24 +41,23 @@ class QuizController extends Controller
                 'message' => null,
                 'data' => null,
                 'error' =>  $e->getMessage(),
-            ], 404);
+            ], 500);
         }
     }
 
     public function store(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'content_id' => 'required',
+            'text' => 'required',
+            'quiz_id' => 'required',
         ]);
 
         try {
 
-            $quizz = Quiz::create($validatedData);
+            $question = Question::create($validatedData);
             return response()->json([
-                'message' => 'Quiz added successfully',
-                'data' => $quizz,
+                'message' => 'Question added successfully',
+                'data' => $question,
                 'error' => null,
             ], 201);
 
@@ -69,26 +68,25 @@ class QuizController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
-      }
+    }
 
     public function update(Request $request, $id): JsonResponse
     {
         $validatedData = $request->validate([
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'content_id' => 'required',
+            'text' => 'required',
+            'quiz_id' => 'required',
         ]);
 
         try {
 
-            $quizz = Quiz::findOrFail($id);
-            $quizz->update($validatedData);
+            $question = Question::findOrFail($id);
+            $question->update($validatedData);
 
             return response()->json([
-                'message' => 'Quiz updated successfully',
-                'data' => $quizz,
+                'message' => 'Question updated successfully',
+                'data' => $question,
                 'error' => null,
-            ], 200);
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => null,
@@ -101,14 +99,14 @@ class QuizController extends Controller
     public function destroy($id): JsonResponse
     {
         try {
-            $quizz = Quiz::findOrFail($id);
-            $quizz->delete();
+            $question = Question::findOrFail($id);
+            $question->delete();
 
             return response()->json([
-                'message' => 'Quiz deleted successfully',
+                'message' => 'Question deleted successfully',
                 'data' => null,
                 'error' => null,
-            ], 200);
+            ]);
 
         } catch (Exception $e) {
             return response()->json([
@@ -117,20 +115,18 @@ class QuizController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
-
     }
 
-    public function getQuizByContentId($id): JsonResponse
+    public function getQestionsByQuizId($id): JsonResponse
     {
         try {
-            $quizzes = Quiz::where('content_id', $id)->get();
+            $questions = Question::where('quiz_id', $id)->get();
             return response()->json([
-                'message' => 'Quizzes retrieved successfully',
-                'data' => $quizzes,
+                'message' => 'Questions retrieved successfully',
+                'data' => $questions,
                 'error' => null,
             ]);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'message' => null,
                 'data' => null,
@@ -140,3 +136,5 @@ class QuizController extends Controller
     }
 
 }
+
+

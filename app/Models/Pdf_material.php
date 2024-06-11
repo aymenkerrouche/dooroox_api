@@ -12,6 +12,7 @@ class Pdf_material extends Model
     protected $fillable = [
         'name',
         'path',
+        'content_id'
     ];
 
     public function content()

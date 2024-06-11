@@ -51,7 +51,7 @@ class VideoController extends Controller
     {
         $request->validate(
             ['path' => 'required|string',
-                'content_id' => 'required']
+            'content_id' => 'required']
         );
 
         try {
@@ -74,9 +74,6 @@ class VideoController extends Controller
 
     public function delete_video($id): JsonResponse
     {
-        $id->validate([
-            'id' => 'required|exists:videos,id',
-        ]);
 
         try {
             $video = Video::findOrFail($id);

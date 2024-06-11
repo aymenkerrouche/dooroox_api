@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\ContentController;
 
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\StudentController;
@@ -14,7 +16,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\BuyController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\Pdf_materialController;
-use App\Http\Controllers\QuizzController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SpecialityController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProfController;
@@ -28,7 +30,6 @@ use App\Http\Controllers\UserController;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-
 Route::post('/login/callback', [SocialiteController::class, 'handleProviderCallback']);
 
 
@@ -70,9 +71,9 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::patch('/students/{id}', [StudentController::class, 'update']);
     Route::delete('/students/{id}', [StudentController::class, 'destroy']);
     Route::post('/students/search', [StudentController::class, 'search']);
-    Route::put('/students/{id}/change-level', [StudentController::class, 'changeLevel']);
-    Route::put('/students/{id}/change-status', [StudentController::class, 'changeStatus']);
-    Route::put('/students/{id}/add-speciality', [StudentController::class, 'addSpeciality']);
+    Route::patch('/students/{id}/change-level', [StudentController::class, 'changeLevel']);
+    Route::patch('/students/{id}/change-status', [StudentController::class, 'changeStatus']);
+    Route::patch('/students/{id}/add-speciality', [StudentController::class, 'addSpeciality']);
     Route::patch('/students/', [StudentController::class, 'update_me']);
 
 
@@ -82,7 +83,7 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::post('/contents', [ContentController::class, 'store']);
     Route::get('/contents', [ContentController::class, 'index']);
     Route::get('/contents/{id}', [ContentController::class, 'show']);
-    Route::put('/{id}', [ContentController::class, 'update']);
+    Route::patch('/{id}', [ContentController::class, 'update']);
     Route::get('/search', [ContentController::class, 'search']);
     Route::get('/teacher/{creatorId}', [ContentController::class, 'getTeacherContents']);
     Route::delete('/contents/{id}', [ContentController::class, 'destroy']);
@@ -99,7 +100,7 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     // Transaction
     Route::post('/transactions', [TransactionController::class, 'create']);
     Route::get('/transactions/{id}', [TransactionController::class, 'show']);
-    Route::put('/transactions/{id}', [TransactionController::class, 'update']);
+    Route::patch('/transactions/{id}', [TransactionController::class, 'update']);
     Route::delete('/transactions/{id}', [TransactionController::class, 'delete']);
     Route::get('/transactions/search', [TransactionController::class, 'search']);
 
@@ -111,29 +112,26 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::get('/registrations', [RegistrationController::class, 'getAllRegistrations']);
     Route::get('/registrations/content-or-user', [RegistrationController::class, 'getRegistrationByContentIdOrUserId']);
     Route::post('/registrations', [RegistrationController::class, 'registerStudent']);
-    Route::put('/registrations/{id}', [RegistrationController::class, 'updateRegistration']);
+    Route::patch('/registrations/{id}', [RegistrationController::class, 'updateRegistration']);
     Route::delete('/registrations/{id}', [RegistrationController::class, 'cancelRegistration']);
 
 
     //wallet
-
     Route::get('/wallets', [WalletController::class, 'index']);
     Route::post('/wallets', [WalletController::class, 'store']); //Create a new wallet
     Route::get('/wallets/{id}', [WalletController::class, 'show']); // Get a specific wallet by ID
     Route::patch('/wallets', [WalletController::class, 'update']); // Update a specific wallet by ID
     Route::delete('/wallets/{id}', [WalletController::class, 'destroy']); // Delete a specific wallet by ID
-
     // Increment or subtract balance routes
     Route::patch('/wallets/increment', [WalletController::class, 'incrementBalance']);// Increment the balance of a wallet
     Route::patch('/wallets/subtract', [WalletController::class, 'subtractBalance']);// Subtract the balance of a wallet
 
 
     //buy
-
     Route::get('/buys', [BuyController::class, 'index']);
     Route::post('/buys', [BuyController::class, 'store']);
     Route::get('/buys/{id}', [BuyController::class, 'show']);
-    Route::put('/buys/{id}', [BuyController::class, 'update']);
+    Route::patch('/buys/{id}', [BuyController::class, 'update']);
     Route::delete('/buys/{id}', [BuyController::class, 'destroy']);
 
 
@@ -142,51 +140,46 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::get('/levels', [LevelController::class, 'index']);
     Route::post('/levels', [LevelController::class, 'store']);
     Route::get('/levels/{id}', [LevelController::class, 'show']);
-    Route::put('/levels/{id}', [LevelController::class, 'update']);
+    Route::patch('/levels/{id}', [LevelController::class, 'update']);
     Route::delete('/levels/{id}', [LevelController::class, 'destroy']);
 
 
     //book
-
     Route::get('/books', [BookController::class, 'index']);
     Route::post('/books', [BookController::class, 'store']);
     Route::get('/books/{id}', [BookController::class, 'show']);
-    Route::put('/books/{id}', [BookController::class, 'update']);
+    Route::patch('/books/{id}', [BookController::class, 'update']);
     Route::delete('/books/{id}', [BookController::class, 'destroy']);
 
 
     //pdf_material
-
     Route::get('/pdf_materials', [Pdf_materialController::class, 'index']);
     Route::get('/pdf_materials/{id}', [Pdf_materialController::class, 'show']);
     Route::post('/pdf_materials', [Pdf_materialController::class, 'store']);
-    Route::put('/pdf_materials/{id}', [Pdf_materialController::class, 'update']);
+    Route::patch('/pdf_materials/{id}', [Pdf_materialController::class, 'update']);
     Route::delete('/pdf_materials/{id}', [Pdf_materialController::class, 'destroy']);
 
 
     //quizz
-
-    Route::get('/quizzes', [QuizzController::class, 'index']);
-    Route::get('/quizzes/{id}', [QuizzController::class, 'show']);
-    Route::post('/quizzes', [QuizzController::class, 'store']);
-    Route::put('/quizzes/{id}', [QuizzController::class, 'update']);
-    Route::delete('/quizzes/{id}', [QuizzController::class, 'destroy']);
-
+    Route::get('/quizzes', [QuizController::class, 'index']);
+    Route::get('/quizzes/{id}', [QuizController::class, 'show']);
+    Route::post('/quizzes', [QuizController::class, 'store']);
+    Route::patch('/quizzes/{id}', [QuizController::class, 'update']);
+    Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
+    Route::get('/quizzes/content/{id}', [QuizController::class, 'getQuizByContentId']);
 
     //specialty
-
     Route::get('/specialities', [SpecialityController::class, 'index']);
     Route::get('/specialities/{id}', [SpecialityController::class, 'show']);
     Route::post('/specialities', [SpecialityController::class, 'store']);
-    Route::put('/specialities/{id}', [SpecialityController::class, 'update']);
+    Route::patch('/specialities/{id}', [SpecialityController::class, 'update']);
     Route::delete('/specialities/{id}', [SpecialityController::class, 'destroy']);
 
 
     //video
-
     Route::get('/videos/{id}', [VideoController::class, 'get_video']);
     Route::post('/videos', [VideoController::class, 'upload_video']);
-    Route::put('/videos/{id}', [VideoController::class, 'update_path']);
+    Route::patch('/videos/{id}', [VideoController::class, 'update_path']);
     Route::delete('/videos/{id}', [VideoController::class, 'delete_video']);
 
 
@@ -195,15 +188,28 @@ Route::group(['middleware'=>['auth:sanctum']],function () {
     Route::get('/profs', [ProfController::class, 'index']);
     Route::post('/profs', [ProfController::class, 'store']);
     Route::get('/profs/{id}', [ProfController::class, 'show']);
-    Route::put('/profs/{id}', [ProfController::class, 'update']);
+    Route::patch('/profs/{id}', [ProfController::class, 'update']);
     Route::delete('/profs/{id}', [ProfController::class, 'destroy']);
     Route::patch('/profs', [ProfController::class, 'update_me']);
 
 
 
-//    Route::put('/profs/{id}/change-status', [ProfController::class, 'changeStatus']);
-//    Route::put('/profs/{id}/add-school', [ProfController::class, 'addSchool']);
-//    Route::post('/profs/{id}/add-content', [ProfController::class, 'addContent']);
+    //Question
+    Route::get('/questions', [QuestionController::class, 'index']);
+    Route::get('/questions/{id}', [QuestionController::class, 'show']);
+    Route::post('/questions', [QuestionController::class, 'store']);
+    Route::patch('/questions/{id}', [QuestionController::class, 'update']);
+    Route::delete('/questions/{id}', [QuestionController::class, 'destroy']);
+    Route::get('/questions/quiz/{id}', [QuestionController::class, 'getQestionsByQuizId']);
+
+
+    // ANSWER
+    Route::get('/answers', [AnswerController::class, 'index']);
+    Route::get('/answers/{id}', [AnswerController::class, 'show']);
+    Route::post('/answers', [AnswerController::class, 'store']);
+    Route::patch('/answers/{id}', [AnswerController::class, 'update']);
+    Route::delete('/answers/{id}', [AnswerController::class, 'destroy']);
+    Route::get('/answers/question/{id}', [AnswerController::class, 'getAnswersByQuestionId']);
 
 });
 

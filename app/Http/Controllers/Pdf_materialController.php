@@ -57,13 +57,10 @@ class Pdf_materialController extends Controller
         $request->validate([
             'name' => 'required|string',
             'path' => 'required|string',
+            'content_id' => 'required',
         ]);
 
         try {
-        $request->validate([
-            'name' => 'required|string',
-            'path' => 'required|string',
-        ]);
 
         $pdfMaterial = Pdf_material::create($request->all());
         return response()->json([
@@ -82,17 +79,31 @@ class Pdf_materialController extends Controller
 
     public function update(Request $request, $id): JsonResponse
     {
-
-
         $request->validate([
-            'name' => 'required|string',
-            'path' => 'required|string',
+            'content_id' => 'required',
         ]);
 
         try {
 
             $pdfMaterial = Pdf_material::findOrFail($id);
-            $pdfMaterial->update($request->all());
+
+
+            if ($request->has('name')) {
+                $request->validate([
+                    'name' => 'string',
+                ]);
+                $pdfMaterial->name = $request->name;
+            }
+
+            if ($request->has('path')) {
+                $request->validate([
+                    'path' => 'string',
+                ]);
+                $pdfMaterial->path = $request->path;
+            }
+
+
+            $pdfMaterial->save();
 
             return response()->json([
                 'message' => 'PDF material updated successfully',
