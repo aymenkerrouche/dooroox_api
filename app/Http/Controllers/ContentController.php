@@ -117,11 +117,8 @@ class ContentController extends Controller
             $request->validate([
                 'keywords' => 'required|string',
             ]);
-
             $keywords = explode(' ', $request->input('keywords'));
-
             $query = Content::query();
-
             foreach ($keywords as $keyword) {
                 $query->where(function ($query) use ($keyword) {
                     $query->where('title', 'like', "%{$keyword}%")
@@ -131,9 +128,7 @@ class ContentController extends Controller
                         ->orWhere('price', 'like', "%{$keyword}%");
                 });
             }
-
             $contents = $query->get();
-
             return response()->json([
                 'message' => 'Search results retrieved successfully',
                 'data' => $contents,
